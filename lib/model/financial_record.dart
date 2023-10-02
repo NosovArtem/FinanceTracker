@@ -1,5 +1,4 @@
 import 'package:finance_tracker/model/obj.dart';
-import 'package:flutter/cupertino.dart';
 
 class FinancialRecord extends Obj{
   int id;

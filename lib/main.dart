@@ -1,6 +1,7 @@
 import 'package:finance_tracker/helper/db_helper.dart';
 import 'package:finance_tracker/screen/menu_backup_screen.dart';
 import 'package:finance_tracker/screen/menu_category_screen.dart';
+import 'package:finance_tracker/screen/menu_export_to_exel.dart';
 import 'package:finance_tracker/screen/menu_feedback_screen.dart';
 import 'package:finance_tracker/screen/menu_user_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ void main() async {
       '/backup': (context) => BackupScreen(),
       '/user': (context) => UserPage(),
       '/feedback': (context) => FeedbackPage(),
+      '/exel': (context) => ImportExportExelScreen(database),
     },
     home: Home(database),
   ));
@@ -73,7 +75,7 @@ class Home extends StatelessWidget {
               title: Text('Export to EXEL'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, '/export');
+                Navigator.pushNamed(context, '/exel');
               },
             ),
             ListTile(

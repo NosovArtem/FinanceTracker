@@ -8,6 +8,7 @@ import '../helper/popup_helper.dart';
 import '../model/expense_category.dart';
 import '../model/financial_record.dart';
 import '../repository/repository_fin_record.dart';
+import '../utils/data_utils.dart';
 
 class FinTrackScreen extends StatefulWidget {
   final BuildContext context;
@@ -26,7 +27,7 @@ class FinTrackScreenState extends State<FinTrackScreen> {
       ExpenseCategoryRepository(widget.database);
   List<FinancialRecord> mainRecords = [];
   List<ExpenseCategory> listCategory = [];
-  Map<int, ExpenseCategory> mapIdToCategory = {};
+  Map<int, String> mapIdToCategory = {};
 
   @override
   void initState() {
@@ -37,9 +38,7 @@ class FinTrackScreenState extends State<FinTrackScreen> {
   Future<void> loadAll() async {
     mainRecords = await repository.getAll();
     listCategory = await repositoryCategory.getAll();
-    for (var value in listCategory) {
-      mapIdToCategory[value.id] = value;
-    }
+    mapIdToCategory = await convertToIdToName(listCategory);
     setState(() {});
   }
 
@@ -89,7 +88,7 @@ class FinTrackScreenState extends State<FinTrackScreen> {
                         // ),
                         // SizedBox(width: 8.0),
                         Text(
-                          'Категория: ${mapIdToCategory[record.id]!.name}',
+                          'Категория: ${mapIdToCategory[record.id]}',
                           style: TextStyle(fontSize: 14),
                         ),
                       ],
