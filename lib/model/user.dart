@@ -1,4 +1,6 @@
-class User {
+import 'package:finance_tracker/model/obj.dart';
+
+class User extends Obj {
   int id;
   String username;
   String password;
@@ -9,7 +11,16 @@ class User {
     required this.password,
   });
 
-  Map<String, dynamic> toMap() {
+  @override
+  Map<String, dynamic> toCreateMap() {
+    return {
+      'username': username,
+      'password': password,
+    };
+  }
+
+  @override
+  Map<String, dynamic> toUpdateMap() {
     return {
       'id': id,
       'username': username,

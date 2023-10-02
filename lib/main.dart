@@ -1,16 +1,33 @@
+import 'package:finance_tracker/helper/db_helper.dart';
+import 'package:finance_tracker/screen/menu_backup_screen.dart';
+import 'package:finance_tracker/screen/menu_category_screen.dart';
+import 'package:finance_tracker/screen/menu_feedback_screen.dart';
+import 'package:finance_tracker/screen/menu_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:sqflite/sqflite.dart';
 
-import 'fin_track_screen.dart';
+import 'screen/fin_track_screen.dart';
 
-void main() => runApp(MaterialApp(
-  routes: {
-  },
-  home: Home(),
-));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final database = await DatabaseHelper.instance.database;
+
+  runApp(MaterialApp(
+    routes: {
+      '/category': (context) => ExpenseCategoryScreen(database),
+      '/backup': (context) => BackupScreen(),
+      '/user': (context) => UserPage(),
+      '/feedback': (context) => FeedbackPage(),
+    },
+    home: Home(database),
+  ));
+}
 
 class Home extends StatelessWidget {
-  Home();
+  Database database;
+
+  Home(this.database);
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +76,18 @@ class Home extends StatelessWidget {
                 Navigator.pushNamed(context, '/export');
               },
             ),
+            ListTile(
+              leading: Icon(Icons.category),
+              title: Text('Category page'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/category');
+              },
+            ),
             Divider(),
             ListTile(
-              leading: Icon(Icons.sentiment_satisfied),
-              title: Text('Send Feedback'),
+              leading: Icon(Icons.send),
+              title: Text('Contact to developer'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/feedback');
@@ -73,13 +98,13 @@ class Home extends StatelessWidget {
               title: Text('Tell a Friend'),
               onTap: () {
                 Share.share('Hey, Check this out:',
-                    subject: 'ссылка на приложение в зависимости от платформы');
+                    subject: 'ссылка_на_приложение_в_зависимости_от_платформы');
               },
             ),
             Divider(),
             Center(
               child: Text(
-                'Health tracker',
+                'Financial tracker',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -96,7 +121,7 @@ class Home extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: FinTrackScreen(context),
+        child: FinTrackScreen(context, database),
       ),
     );
   }
