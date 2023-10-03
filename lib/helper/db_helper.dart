@@ -76,13 +76,15 @@ class DatabaseHelper {
 
     try {
       await _database?.close();
-      final destination = await getTemporaryDirectory();
+
+      final sourceFile = File(sourcePath);
 
       DateTime now = DateTime.now();
       String formattedDateTime = DateFormat('yyyy_MM_dd_HH_mm').format(now);
-      final sourceFile = File(sourcePath);
+      final destination = await getTemporaryDirectory();
       final destinationFile = File(
           join(destination.path, '${formattedDateTime}_backup_database.db'));
+
       await sourceFile.copy(destinationFile.path);
 
       Share.shareFiles([destinationFile.path], text: 'Поделиться файлом');

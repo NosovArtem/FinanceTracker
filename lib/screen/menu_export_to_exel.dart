@@ -9,6 +9,9 @@ import 'package:finance_tracker/repository/repository_category.dart';
 import 'package:finance_tracker/repository/repository_fin_record.dart';
 import 'package:finance_tracker/utils/data_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -66,11 +69,16 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
     // Получите байты данных Excel
     var excelBytes = await excel.encode();
 
-    // Сохраните файл
-    var file = File('path_to_save_excel_file.xlsx');
-    await file.writeAsBytes(Uint8List.fromList(excelBytes!));
+    DateTime now = DateTime.now();
+    String formattedDateTime = DateFormat('yyyy_MM_dd_HH_mm').format(now);
+    final destination = await getTemporaryDirectory();
+    final destinationFile = File(
+        join(destination.path, '${formattedDateTime}_excel_file.xlsx'));
 
-    Share.shareFiles([file.path], text: 'Поделиться файлом');
+    // Сохраните файл
+    await destinationFile.writeAsBytes(Uint8List.fromList(excelBytes!));
+
+    Share.shareFiles([destinationFile.path], text: 'Поделиться файлом');
 
   }
 
