@@ -9,12 +9,8 @@ import 'package:share/share.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static const databaseName = "FinTracker4.db";
+  static const databaseName = "FinTracker21.db";
   static const _databaseVersion = 1;
-
-  static const String tableUser = 'user';
-  static const String tableFinancialRecords = 'financial_record';
-  static const String tableCategory = 'category';
 
   DatabaseHelper._privateConstructor();
 
@@ -40,30 +36,100 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE '$tableUser' (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            password TEXT NOT NULL
-          );
-        ''');
+    CREATE TABLE 'user' (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
+    );
+   ''');
+
     await db.execute('''
-          CREATE TABLE '$tableFinancialRecords' (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            category_id INTEGER NOT NULL,
-            amount REAL NOT NULL,
-            note TEXT NOT NULL,
-            date TEXT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users (id),
-            FOREIGN KEY (category_id) REFERENCES categories (id)
-          );
-        ''');
+    CREATE TABLE 'financial_record' (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    amount REAL NOT NULL,
+    note TEXT,
+    date DATE NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (category_id) REFERENCES categories (id)
+    );
+    ''');
+
     await db.execute('''
-          CREATE TABLE '$tableCategory' (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL
-          );
-        ''');
+    CREATE TABLE 'category' (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+    );
+    ''');
+
+    await db
+        .execute('''INSERT INTO 'category' VALUES(1, 'groceries');''');
+    await db.execute('''INSERT INTO 'category' VALUES(2, 'bill');''');
+    await db.execute('''INSERT INTO 'category' VALUES(3, 'archi');''');
+    await db.execute('''INSERT INTO 'category' VALUES(4, 'doctor');''');
+    await db
+        .execute('''INSERT INTO 'category' VALUES(5, 'ready food');''');
+    await db.execute('''INSERT INTO 'category' VALUES(6, 'other');''');
+
+    await db.execute('''
+    CREATE TABLE debts_loans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    borrower_id INTEGER NOT NULL, 
+    lender_id INTEGER NOT NULL,
+    loan_date DATE NOT NULL,
+    amount REAL NOT NULL,
+    balance REAL NOT NULL,
+    repayment_date DATE,
+    repayment_amount REAL,
+    note TEXT,
+    status TEXT,
+    FOREIGN KEY (borrower_id) REFERENCES borrowers(id),
+    FOREIGN KEY (lender_id) REFERENCES lenders(id)
+    );
+    ''');
+
+    await db.execute('''
+    CREATE TABLE repayments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    debt_loan_id INTEGER NOT NULL, 
+    repayment_date DATE NOT NULL, 
+    repayment_amount REAL NOT NULL, 
+    note TEXT, 
+    FOREIGN KEY (debt_loan_id) REFERENCES debts_loans(id)
+    );
+    ''');
+
+    await db.execute('''
+    CREATE TABLE borrowers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT NOT NULL, 
+    last_name TEXT NOT NULL, 
+    email TEXT, 
+    phone_number TEXT 
+    );
+    ''');
+
+    await db.execute('''
+    CREATE TABLE lenders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    company_name TEXT NOT NULL, 
+    contact_person TEXT, 
+    email TEXT, 
+    phone_number TEXT 
+    );
+    ''');
+
+    await db.execute('''
+    CREATE TABLE savings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    account_name TEXT NOT NULL,
+    goal_name TEXT NOT NULL,
+    currency TEXT NOT NULL,
+    amount REAL NOT NULL,
+    note TEXT 
+    );
+    ''');
   }
 
 // --------------------------------------------------------

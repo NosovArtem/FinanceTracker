@@ -58,7 +58,6 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
     ).then((map) {
       if (map != null) {
         add(map["new"]);
-        setState(() {});
       }
     });
   }

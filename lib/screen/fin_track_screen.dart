@@ -8,7 +8,6 @@ import '../helper/popup_helper.dart';
 import '../model/expense_category.dart';
 import '../model/financial_record.dart';
 import '../repository/repository_fin_record.dart';
-import '../utils/data_utils.dart';
 
 class FinTrackScreen extends StatefulWidget {
   final BuildContext context;
@@ -27,7 +26,8 @@ class FinTrackScreenState extends State<FinTrackScreen> {
       ExpenseCategoryRepository(widget.database);
   List<FinancialRecord> mainRecords = [];
   List<ExpenseCategory> listCategory = [];
-  Map<int, String> mapIdToCategory = {};
+  double totalSpent = 0.0;
+  DateTime currentDate = DateTime.now();
 
   @override
   void initState() {
@@ -36,10 +36,18 @@ class FinTrackScreenState extends State<FinTrackScreen> {
   }
 
   Future<void> loadAll() async {
-    mainRecords = await repository.getAll();
+    mainRecords = await repository.getAllByMonth(currentDate);
     listCategory = await repositoryCategory.getAll();
-    mapIdToCategory = await convertToIdToName(listCategory);
+    totalSpent = calcMonthSpent(mainRecords);
     setState(() {});
+  }
+
+  double calcMonthSpent(List<FinancialRecord> list) {
+    double totalSpent = 0.0;
+    for (var value in list) {
+      totalSpent = totalSpent + value.amount;
+    }
+    return totalSpent;
   }
 
   Future<void> add(FinancialRecord record) async {
@@ -57,102 +65,72 @@ class FinTrackScreenState extends State<FinTrackScreen> {
     loadAll();
   }
 
+  void _previousMonth() {
+    setState(() {
+      currentDate = DateTime(currentDate.year, currentDate.month - 1);
+    });
+    loadAll();
+  }
+
+  void _nextMonth() {
+    setState(() {
+      currentDate = DateTime(currentDate.year, currentDate.month + 1);
+    });
+    loadAll();
+  }
+
+  Future<void> _refresh() async {
+    // currentDate = DateTime.now();
+    setState(() {
+      loadAll();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat.yMMMM().format(currentDate);
     return Scaffold(
-      body: ListView.builder(
-        physics: AlwaysScrollableScrollPhysics(),
-        itemCount: mainRecords.length,
-        itemBuilder: (context, index) {
-          final record = mainRecords[index];
-          return Container(
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(155, 183, 123, 70),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 5),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        // Image.asset(
-                        //   'assets/icons/100/height-100.png',
-                        //   width: 28.0,
-                        //   height: 28.0,
-                        // ),
-                        // SizedBox(width: 8.0),
-                        Text(
-                          'Категория: ${mapIdToCategory[record.id]}',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        // Image.asset(
-                        //   'assets/icons/100/height-100.png',
-                        //   width: 28.0,
-                        //   height: 28.0,
-                        // ),
-                        // SizedBox(width: 8.0),
-                        Text(
-                          'Сумма: ${record.amount}',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ],
+      body: Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.arrow_left,
+                  size: 50,
                 ),
-                Row(
-                  children: [
-                    SizedBox(width: 35.0),
-                    Text(
-                      record.note.isEmpty ? "" : 'Заметка: ${record.note}',
-                      style: TextStyle(fontSize: 14),
+                onPressed: _previousMonth,
+              ),
+              Expanded(
+                child: Center(
+                  child: ElevatedButton(
+                    onPressed: _refresh,
+                    child: Text(
+                      formattedDate,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Text(
-                      '${DateFormat('yyyy-MM-dd HH:mm').format(record.date)}',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    Expanded(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              _updateRecord(
-                                  context,
-                                  AddTransactionScreen(
-                                    initialData: record,
-                                    categoryList: listCategory,
-                                  ));
-                            },
-                            icon: Icon(Icons.edit)),
-                        IconButton(
-                            onPressed: () {
-                              showConfirmationDialog(context, () {
-                                delete(record.id);
-                              });
-                            },
-                            icon: Icon(Icons.delete))
-                      ],
-                    ))
-                  ],
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.arrow_right,
+                  size: 50,
                 ),
-              ],
-            ),
-          );
-        },
+                onPressed: _nextMonth,
+              ),
+            ],
+          ),
+          Text('Сумма потраченных средств за месяц'),
+          Text(
+            '\РСД $totalSpent',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          Expanded(
+            child: getCardList(),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -160,6 +138,103 @@ class FinTrackScreenState extends State<FinTrackScreen> {
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget getCardList() {
+    return ListView.builder(
+      physics: AlwaysScrollableScrollPhysics(),
+      itemCount: mainRecords.length,
+      itemBuilder: (context, index) {
+        final record = mainRecords[index];
+        return Container(
+          margin: EdgeInsets.all(10),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(155, 183, 123, 70),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 5),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      // Image.asset(
+                      //   'assets/icons/100/height-100.png',
+                      //   width: 28.0,
+                      //   height: 28.0,
+                      // ),
+                      // SizedBox(width: 8.0),
+                      Text(
+                        'Категория: ${record.category.name}',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      // Image.asset(
+                      //   'assets/icons/100/height-100.png',
+                      //   width: 28.0,
+                      //   height: 28.0,
+                      // ),
+                      // SizedBox(width: 8.0),
+                      Text(
+                        'Сумма: ${record.amount}',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  SizedBox(width: 35.0),
+                  Text(
+                    record.note.isEmpty ? "" : 'Заметка: ${record.note}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    '${DateFormat('yyyy-MM-dd HH:mm').format(record.date)}',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  Expanded(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            _updateRecord(
+                                context,
+                                AddTransactionScreen(
+                                  getFR(record),
+                                  listCategory,
+                                ));
+                          },
+                          icon: Icon(Icons.edit)),
+                      IconButton(
+                          onPressed: () {
+                            showConfirmationDialog(context, () {
+                              delete(record.id);
+                            });
+                          },
+                          icon: Icon(Icons.delete))
+                    ],
+                  ))
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -181,8 +256,11 @@ class FinTrackScreenState extends State<FinTrackScreen> {
                         _createRecord(
                             context,
                             AddTransactionScreen(
-                              categoryList: listCategory,
-                              selected: listCategory[index].name,
+                              {
+                                'cat_id': listCategory[index].id,
+                                'cat_name': listCategory[index].name,
+                              },
+                              listCategory,
                             ));
                       },
                       child: Text(listCategory[index].name),
@@ -191,6 +269,18 @@ class FinTrackScreenState extends State<FinTrackScreen> {
             ));
       },
     );
+  }
+
+  Map<String, dynamic> getFR(FinancialRecord record) {
+    return {
+      'id': record.id,
+      'userId': record.userId,
+      'cat_id': record.category.id,
+      'cat_name': record.category.name,
+      'amount': record.amount,
+      'note': record.note,
+      'date': record.date,
+    };
   }
 
   void _createRecord(BuildContext context, StatefulWidget widget) {
@@ -202,7 +292,6 @@ class FinTrackScreenState extends State<FinTrackScreen> {
     ).then((map) {
       if (map != null) {
         add(map["new"]);
-        setState(() {});
       }
     });
   }
@@ -220,5 +309,4 @@ class FinTrackScreenState extends State<FinTrackScreen> {
       }
     });
   }
-
 }

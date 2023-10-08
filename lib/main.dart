@@ -1,8 +1,10 @@
 import 'package:finance_tracker/helper/db_helper.dart';
 import 'package:finance_tracker/screen/menu_backup_screen.dart';
 import 'package:finance_tracker/screen/menu_category_screen.dart';
+import 'package:finance_tracker/screen/menu_debts_and_loans_screen.dart';
 import 'package:finance_tracker/screen/menu_export_to_exel.dart';
 import 'package:finance_tracker/screen/menu_feedback_screen.dart';
+import 'package:finance_tracker/screen/menu_savingd_screen.dart';
 import 'package:finance_tracker/screen/menu_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
@@ -21,6 +23,8 @@ void main() async {
       '/user': (context) => UserPage(),
       '/feedback': (context) => FeedbackPage(),
       '/exel': (context) => ImportExportExelScreen(database),
+      '/debtloan': (context) => DebtLoanListScreen(database),
+      '/savings': (context) => SavingsListScreen(database),
     },
     home: Home(database),
   ));
@@ -84,6 +88,22 @@ class Home extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/category');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.money_off),
+              title: Text('Debts & Loans'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/debtloan');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.attach_money),
+              title: Text('Savings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/savings');
               },
             ),
             Divider(),

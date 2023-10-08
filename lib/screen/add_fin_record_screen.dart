@@ -1,16 +1,15 @@
 import 'package:finance_tracker/model/financial_record.dart';
 import 'package:flutter/material.dart';
 
+import '../helper/helper.dart';
 import '../model/expense_category.dart';
+import '../widget/date.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  final FinancialRecord? initialData;
+  final Map<String, dynamic> initialData;
   final List<ExpenseCategory> categoryList;
-  final String? selected;
 
-  AddTransactionScreen(
-      {Key? key, this.initialData, required this.categoryList, this.selected})
-      : super(key: key);
+  AddTransactionScreen(this.initialData, this.categoryList);
 
   @override
   _AddTransactionScreenState createState() => _AddTransactionScreenState();
@@ -21,27 +20,34 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   TextEditingController amountController = TextEditingController();
   TextEditingController noteController = TextEditingController();
   Map<String, ExpenseCategory> mapNameToCategory = {};
-  Map<int, ExpenseCategory> mapIdToCategory = {};
   List<String> keys = [];
   late String selectedValue;
 
   get _categories => widget.categoryList;
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  late DateTimePickerWidget dateTimePickerWidget;
 
   @override
   void initState() {
     super.initState();
     for (var value in _categories) {
       mapNameToCategory[value.name] = value;
-      mapIdToCategory[value.id] = value;
       keys.add(value.name);
     }
-    if (widget.initialData != null) {
-      selectedValue = mapIdToCategory[widget.initialData!.id]!.name;
-      amountController.text = widget.initialData!.amount.toString();
-      noteController.text = widget.initialData!.note;
-    } else {
-      selectedValue = widget.selected!;
-    }
+
+    selectedValue = widget.initialData['cat_name'] ?? "";
+    amountController.text = widget.initialData['amount'] != null
+        ? widget.initialData['amount'].toString()
+        : "";
+    noteController.text = widget.initialData['note'] ?? "";
+
+    DateTime dateTime = widget.initialData['date'] ?? DateTime.now();
+    dateTimePickerWidget = DateTimePickerWidget(
+      initialDate: dateTime,
+      controllerDate: dateController,
+      controllerTime: timeController,
+    );
   }
 
   @override
@@ -82,16 +88,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               controller: noteController,
               decoration: InputDecoration(labelText: 'Заметка'),
             ),
-            SizedBox(height: 16.0),
+            dateTimePickerWidget,
             ElevatedButton(
               onPressed: () async {
+                DateTime d = DateTime.parse(dateController.text);
+                TimeOfDay t = parseTimeOfDay(timeController.text);
                 final newRecord = FinancialRecord(
-                    id: widget.initialData?.id ?? -1,
-                    userId: widget.initialData?.userId ?? 1,
-                    categoryId: mapNameToCategory[selectedValue]!.id,
-                    amount: double.parse(amountController.text),
-                    note: noteController.text,
-                    date: DateTime.now());
+                  id: widget.initialData['id'] ?? -1,
+                  userId: widget.initialData['userId'] ?? 1,
+                  category: mapNameToCategory[selectedValue]!,
+                  amount: double.parse(amountController.text),
+                  note: noteController.text,
+                  date: DateTime(d.year, d.month, d.day, t.hour, t.minute),
+                );
                 Navigator.pop(
                     context, {"old": widget.initialData, "new": newRecord});
               },

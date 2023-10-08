@@ -42,10 +42,6 @@ class _BackupScreenState extends State<BackupScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

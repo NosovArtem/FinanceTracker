@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 import 'obj.dart';
 
 class ExpenseCategory extends Obj {
@@ -29,5 +27,4 @@ class ExpenseCategory extends Obj {
       name: map['name'],
     );
   }
-
 }
