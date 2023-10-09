@@ -70,63 +70,70 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
                     children: [
                       TextField(
                         controller: _noteController,
-                        decoration: InputDecoration(labelText: 'Заметка'),
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.note_add),
+                            labelText: 'Заметка'),
                       ),
                       TextField(
                         controller: _amountController,
-                        decoration: InputDecoration(labelText: 'Сумма'),
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.attach_money),
+                            labelText: 'Сумма'),
                         keyboardType: TextInputType.number,
                       ),
-
                       Text('Дата взятия'),
                       dateOfGet,
-
-                      // dateOfTake,
                       TextField(
                         controller: _balanceController,
-                        decoration: InputDecoration(labelText: 'Остаток'),
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.attach_money),
+                            labelText: 'Остаток'),
                         keyboardType: TextInputType.number,
                       ),
                       TextField(
                         controller: _statusController,
-                        decoration: InputDecoration(labelText: 'Статус'),
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.info), labelText: 'Статус'),
                       ),
                       TextField(
                         controller: _repaymentAmountController,
-                        decoration:
-                            InputDecoration(labelText: 'Cумма возврата'),
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.attach_money),
+                            labelText: 'Cумма возврата'),
                       ),
-
                       Text('Дата возврата'),
                       dateOfTake,
-
-                      SizedBox(height: 16.0),
-                      ElevatedButton(
-                        onPressed: () async {
-                          DateTime d = DateTime.parse(getDateController.text);
-                          TimeOfDay t = parseTimeOfDay(getTimeController.text);
-                          DateTime d1 = DateTime.parse(takeDateController.text);
-                          TimeOfDay t1 =
-                              parseTimeOfDay(takeTimeController.text);
-                          final newDebtLoan = DebtLoan(
-                            id: 1,
-                            borrowerId: 1,
-                            lenderId: 1,
-                            loanDate: DateTime(
-                                d.year, d.month, d.day, t.hour, t.minute),
-                            amount: double.parse(_amountController.text),
-                            balance: double.parse(_balanceController.text),
-                            repaymentDate: DateTime(
-                                d1.year, d1.month, d1.day, t1.hour, t1.minute),
-                            repaymentAmount:
-                                double.parse(_repaymentAmountController.text),
-                            note: _noteController.text,
-                            status: _statusController.text,
-                          );
-                          Navigator.pop(
-                              context, {"old": null, "new": newDebtLoan});
-                        },
-                        child: Text('Добавить'),
+                      Center(
+                        heightFactor: 2,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            DateTime d = DateTime.parse(getDateController.text);
+                            TimeOfDay t =
+                                parseTimeOfDay(getTimeController.text);
+                            DateTime d1 =
+                                DateTime.parse(takeDateController.text);
+                            TimeOfDay t1 =
+                                parseTimeOfDay(takeTimeController.text);
+                            final newDebtLoan = DebtLoan(
+                              id: 1,
+                              borrowerId: 1,
+                              lenderId: 1,
+                              loanDate: DateTime(
+                                  d.year, d.month, d.day, t.hour, t.minute),
+                              amount: double.parse(_amountController.text),
+                              balance: double.parse(_balanceController.text),
+                              repaymentDate: DateTime(d1.year, d1.month, d1.day,
+                                  t1.hour, t1.minute),
+                              repaymentAmount:
+                                  double.parse(_repaymentAmountController.text),
+                              note: _noteController.text,
+                              status: _statusController.text,
+                            );
+                            Navigator.pop(
+                                context, {"old": null, "new": newDebtLoan});
+                          },
+                          child: Text('Добавить'),
+                        ),
                       ),
                     ],
                   ),
@@ -136,6 +143,4 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
           ),
         ));
   }
-
-
 }

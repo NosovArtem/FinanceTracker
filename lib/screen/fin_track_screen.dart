@@ -157,59 +157,34 @@ class FinTrackScreenState extends State<FinTrackScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 5),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      // Image.asset(
-                      //   'assets/icons/100/height-100.png',
-                      //   width: 28.0,
-                      //   height: 28.0,
-                      // ),
-                      // SizedBox(width: 8.0),
-                      Text(
-                        'Категория: ${record.category.name}',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      // Image.asset(
-                      //   'assets/icons/100/height-100.png',
-                      //   width: 28.0,
-                      //   height: 28.0,
-                      // ),
-                      // SizedBox(width: 8.0),
-                      Text(
-                        'Сумма: ${record.amount}',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ],
+              Text(
+                '${DateFormat('EEEE, d MMMM').format(record.date)}',
+                style: TextStyle(fontSize: 15),
               ),
               Row(
                 children: [
-                  SizedBox(width: 35.0),
-                  Text(
-                    record.note.isEmpty ? "" : 'Заметка: ${record.note}',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    '${DateFormat('yyyy-MM-dd HH:mm').format(record.date)}',
-                    style: TextStyle(fontSize: 14),
+                  Icon(Icons.add),
+                  SizedBox(width: 15.0),
+                  Column(
+                    children: [
+                      Text(
+                        record.category.name,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        record.note,
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
                   ),
                   Expanded(
                       child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      Text(
+                        record.amount.toString(),
+                        style: TextStyle(fontSize: 25),
+                      ),
                       IconButton(
                           onPressed: () {
                             _updateRecord(

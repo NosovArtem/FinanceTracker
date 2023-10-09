@@ -62,6 +62,7 @@ class _SavingsListScreenState extends State<SavingsListScreen> {
                   subtitle: Text(
                     'Цель: ${saving.goalName}'
                     '\nВалюта: ${saving.currency}'
+                    '\nNote: ${saving.note}'
                     '\nСумма: ${saving.amount}',
                   ),
                 );

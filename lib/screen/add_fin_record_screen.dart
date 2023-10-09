@@ -69,6 +69,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             DropdownButtonFormField(
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.label_important),
+              ),
               value: selectedValue,
               onChanged: (newValue) {
                 setState(() {
@@ -76,39 +79,46 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 });
               },
               items: keys.map((key) {
-                return DropdownMenuItem(value: key, child: Text(key));
+                return DropdownMenuItem(
+                    value: key,
+                    child: Center(child: Text(key),));
               }).toList(),
             ),
             TextFormField(
               controller: amountController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Сумма'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.attach_money), labelText: 'Сумма'),
             ),
             TextFormField(
               controller: noteController,
-              decoration: InputDecoration(labelText: 'Заметка'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.format_line_spacing_sharp), labelText: 'Заметка'),
             ),
             dateTimePickerWidget,
-            ElevatedButton(
-              onPressed: () async {
-                DateTime d = DateTime.parse(dateController.text);
-                TimeOfDay t = parseTimeOfDay(timeController.text);
-                final newRecord = FinancialRecord(
-                  id: widget.initialData['id'] ?? -1,
-                  userId: widget.initialData['userId'] ?? 1,
-                  category: mapNameToCategory[selectedValue]!,
-                  amount: double.parse(amountController.text),
-                  note: noteController.text,
-                  date: DateTime(d.year, d.month, d.day, t.hour, t.minute),
-                );
-                Navigator.pop(
-                    context, {"old": widget.initialData, "new": newRecord});
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
+            Center(
+              heightFactor: 2,
+              child: ElevatedButton(
+                onPressed: () async {
+                  DateTime d = DateTime.parse(dateController.text);
+                  TimeOfDay t = parseTimeOfDay(timeController.text);
+                  final newRecord = FinancialRecord(
+                    id: widget.initialData['id'] ?? -1,
+                    userId: widget.initialData['userId'] ?? 1,
+                    category: mapNameToCategory[selectedValue]!,
+                    amount: double.parse(amountController.text),
+                    note: noteController.text,
+                    date: DateTime(d.year, d.month, d.day, t.hour, t.minute),
+                  );
+                  Navigator.pop(
+                      context, {"old": widget.initialData, "new": newRecord});
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  onPrimary: Colors.white,
+                ),
+                child: Text('Сохранить'),
               ),
-              child: Text('Сохранить'),
             ),
           ],
         ),

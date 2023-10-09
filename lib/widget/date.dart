@@ -76,67 +76,71 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
-      SizedBox(
-        height: 15.0,
-      ),
-      Row(
-        children: [
-          SizedBox(
-            height: 5.0,
+
+      Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              width: 1.0,
+            ),
           ),
-          Container(
-            width: 150,
-            child: InkWell(
-              onTap: () => _selectDate(context),
-              child: Ink(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  // Отступы внутри кнопки
-                  child: Text(
-                    'Date: ${"${selectedDate.toLocal()}".split(' ')[0]}',
-                    style: TextStyle(
-                      color: Colors.white, // Цвет текста
-                      fontSize: 16,
+        ),
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+        child: Row(
+          children: [
+            Icon(Icons.calendar_today),
+            SizedBox(
+              width: 15.0,
+            ),
+            Container(
+              width: 105,
+              child: InkWell(
+                onTap: () => _selectDate(context),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      '${"${selectedDate.toLocal()}".split(' ')[0]}',
+                      style: TextStyle(
+                        color: Colors.white, // Цвет текста
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            width: 10.0,
-          ),
-          Container(
-            width: 150,
-            child: InkWell(
-              onTap: () => _selectTime(context),
-              child: Ink(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  // Отступы внутри кнопки
-                  child: Text(
-                    'Time: ${selectedTime.format(context)}',
-                    style: TextStyle(
-                      color: Colors.white, // Цвет текста
-                      fontSize: 16,
+            SizedBox(
+              width: 10.0,
+            ),
+            Container(
+              width: 90,
+              child: InkWell(
+                onTap: () => _selectTime(context),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      '${selectedTime.format(context)}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      SizedBox(
-        height: 5.0,
+          ],
+        ),
       ),
     ]);
   }

@@ -61,6 +61,7 @@ class _RepaymentHistoryScreenState extends State<RepaymentHistoryScreen> {
                 return ListTile(
                   subtitle: Text(
                     'Сумма: ${repayment.repaymentAmount.toStringAsFixed(2)}'
+                    '\nNote: ${repayment.note}'
                     '\nДата платежа: ${repayment.repaymentDate.toLocal().toString().split(' ')[0]}',
                   ),
                 );

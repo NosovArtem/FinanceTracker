@@ -29,20 +29,24 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
           children: <Widget>[
             TextFormField(
               controller: categoryController,
-              decoration: InputDecoration(labelText: 'Категория'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.label_important),
+                  labelText: 'Категория'),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () async {
-                ExpenseCategory newRecord =
-                    ExpenseCategory(id: -1, name: categoryController.text);
-                Navigator.pop(context, {"old": null, "new": newRecord});
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
+            Center(
+              heightFactor: 2,
+              child: ElevatedButton(
+                onPressed: () async {
+                  ExpenseCategory newRecord =
+                  ExpenseCategory(id: -1, name: categoryController.text);
+                  Navigator.pop(context, {"old": null, "new": newRecord});
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  onPrimary: Colors.white,
+                ),
+                child: Text('Сохранить'),
               ),
-              child: Text('Сохранить'),
             ),
           ],
         ),

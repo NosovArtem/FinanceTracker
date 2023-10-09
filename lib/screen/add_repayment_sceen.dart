@@ -7,7 +7,6 @@ import '../widget/date.dart';
 class AddRepaymentScreen extends StatefulWidget {
   final Map<String, dynamic> initialData;
 
-
   AddRepaymentScreen(this.initialData);
 
   @override
@@ -28,7 +27,6 @@ class _AddRepaymentScreenState extends State<AddRepaymentScreen> {
     dateController.dispose();
     timeController.dispose();
   }
-
 
   @override
   void initState() {
@@ -53,33 +51,40 @@ class _AddRepaymentScreenState extends State<AddRepaymentScreen> {
           children: <Widget>[
             TextFormField(
               controller: amountController,
-              decoration: InputDecoration(labelText: 'Сумма'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.attach_money),
+                  labelText: 'Сумма'),
               keyboardType: TextInputType.number,
             ),
             TextFormField(
               controller: noteController,
-              decoration: InputDecoration(labelText: 'note'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.format_line_spacing_sharp),
+                  labelText: 'Note'),
             ),
             dateTimePickerWidget,
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () async {
-                DateTime d = DateTime.parse(dateController.text);
-                TimeOfDay t = parseTimeOfDay(timeController.text);
-                Repayment newRepayment = Repayment(
+            Center(
+              heightFactor: 2,
+              child: ElevatedButton(
+                onPressed: () async {
+                  DateTime d = DateTime.parse(dateController.text);
+                  TimeOfDay t = parseTimeOfDay(timeController.text);
+                  Repayment newRepayment = Repayment(
                     id: 1,
                     debtLoanId: 1,
-                    repaymentDate:  DateTime(d.year, d.month, d.day, t.hour, t.minute),
+                    repaymentDate:
+                        DateTime(d.year, d.month, d.day, t.hour, t.minute),
                     repaymentAmount: double.parse(amountController.text),
                     note: noteController.text,
-                );
-                Navigator.pop(context, {"old": null, "new": newRepayment});
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
+                  );
+                  Navigator.pop(context, {"old": null, "new": newRepayment});
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  onPrimary: Colors.white,
+                ),
+                child: Text('Сохранить'),
               ),
-              child: Text('Сохранить'),
             ),
           ],
         ),

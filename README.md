@@ -1,5 +1,15 @@
 # finance_tracker
 
+### New features
+ - group records by date
+ - update EXEL import
+ - rework user
+ - rework borrower
+ - rework lender
+ - make a user-friendly interface 
+ - add icons
+ - add currents table
+
 A new Flutter project.
 
 ## Getting Started

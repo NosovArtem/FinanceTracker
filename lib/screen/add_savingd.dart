@@ -36,43 +36,53 @@ class _AddSavingsScreenState extends State<AddSavingsScreen> {
           children: <Widget>[
             TextFormField(
               controller: accountNameController,
-              decoration: InputDecoration(labelText: 'Счет/Имя'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.account_balance),
+                  labelText: 'Счет/Имя'),
             ),
             TextFormField(
               controller: goalNameController,
-              decoration: InputDecoration(labelText: 'Цель'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.golf_course), labelText: 'Цель'),
             ),
             TextFormField(
               controller: currencyController,
-              decoration: InputDecoration(labelText: 'Валюта'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.currency_exchange),
+                  labelText: 'Валюта'),
             ),
             TextFormField(
               controller: amountController,
-              decoration: InputDecoration(labelText: 'Сумма'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.attach_money), labelText: 'Сумма'),
               keyboardType: TextInputType.number,
             ),
             TextFormField(
               controller: noteController,
-              decoration: InputDecoration(labelText: 'Note'),
+              decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.format_line_spacing_sharp),
+                  labelText: 'Note'),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () async {
-                Savings newSaving = Savings(
-                  id: 1,
-                  accountName: accountNameController.text,
-                  goalName: goalNameController.text,
-                  currency: currencyController.text,
-                  amount: double.parse(amountController.text),
-                  note: noteController.text,
-                );
-                Navigator.pop(context, {"old": null, "new": newSaving});
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                onPrimary: Colors.white,
+            Center(
+              heightFactor: 2,
+              child: ElevatedButton(
+                onPressed: () async {
+                  Savings newSaving = Savings(
+                    id: 1,
+                    accountName: accountNameController.text,
+                    goalName: goalNameController.text,
+                    currency: currencyController.text,
+                    amount: double.parse(amountController.text),
+                    note: noteController.text,
+                  );
+                  Navigator.pop(context, {"old": null, "new": newSaving});
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  onPrimary: Colors.white,
+                ),
+                child: Text('Сохранить'),
               ),
-              child: Text('Сохранить'),
             ),
           ],
         ),
