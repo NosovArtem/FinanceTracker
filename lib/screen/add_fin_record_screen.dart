@@ -1,21 +1,27 @@
 import 'package:finance_tracker/model/financial_record.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../helper/helper.dart';
+import '../helper/popup_helper.dart';
 import '../model/expense_category.dart';
+import '../repository/repository_fin_record.dart';
 import '../widget/date.dart';
 
 class AddTransactionScreen extends StatefulWidget {
+  final Database database;
   final Map<String, dynamic> initialData;
   final List<ExpenseCategory> categoryList;
 
-  AddTransactionScreen(this.initialData, this.categoryList);
+  AddTransactionScreen(this.database, this.initialData, this.categoryList);
 
   @override
   _AddTransactionScreenState createState() => _AddTransactionScreenState();
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
+  late FinancialRecordRepository repository =
+  FinancialRecordRepository(widget.database);
   TextEditingController categoryController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController noteController = TextEditingController();
@@ -61,7 +67,22 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Добавить запись'),
+        title: Row(
+          children: [
+            Text('Добавить запись'),
+          Expanded(child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                  onPressed: () async {
+                    showConfirmationDialog(context, () {
+                      Navigator.pop(context, {"delete": widget.initialData['id']});
+                    });
+                  },
+                  icon: Icon(Icons.delete))
+            ],
+          ))],
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -81,7 +102,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               items: keys.map((key) {
                 return DropdownMenuItem(
                     value: key,
-                    child: Center(child: Text(key),));
+                    child: Center(
+                      child: Text(key),
+                    ));
               }).toList(),
             ),
             TextFormField(
@@ -93,7 +116,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             TextFormField(
               controller: noteController,
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.format_line_spacing_sharp), labelText: 'Заметка'),
+                  prefixIcon: Icon(Icons.format_line_spacing_sharp),
+                  labelText: 'Заметка'),
             ),
             dateTimePickerWidget,
             Center(
@@ -110,8 +134,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     note: noteController.text,
                     date: DateTime(d.year, d.month, d.day, t.hour, t.minute),
                   );
-                  Navigator.pop(
-                      context, {"old": widget.initialData, "new": newRecord});
+                  Navigator.pop(context, {"new": newRecord});
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,

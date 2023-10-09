@@ -16,8 +16,8 @@ void showConfirmationDialog(BuildContext context, VoidCallback callback) {
           ),
           ElevatedButton(
             onPressed: () {
-              callback();
               Navigator.of(context).pop();
+              callback();
             },
             child: Text('Принять'),
           ),
