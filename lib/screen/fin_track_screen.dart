@@ -225,6 +225,7 @@ class FinTrackScreenState extends State<FinTrackScreen> {
                   ],
                 ),
                 ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: map[dateKey]!.length,
                   itemBuilder: (BuildContext context, int innerIndex) {
