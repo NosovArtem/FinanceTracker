@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../helper/helper.dart';
+
 class FeedbackPage extends StatefulWidget {
   @override
   FeedbackPageState createState() => FeedbackPageState();
@@ -101,20 +103,7 @@ class FeedbackPageState extends State<FeedbackPage> {
   void _sendFeedback() {
     final email = _emailController.text;
     final feedback = _feedbackController.text;
-    sendEmail(email + " " + feedback);
+    sendEmail('Тема сообщения', email + " " + feedback);
   }
 
-  Future<void> sendEmail(String body) async {
-    final Uri emailUri = Uri(
-      scheme: 'mailto',
-      path: 'tatatansv@gmail.com',
-      queryParameters: {'subject': 'Тема сообщения', 'body': body},
-    );
-
-    if (await canLaunch(emailUri.toString())) {
-      await launch(emailUri.toString());
-    } else {
-      print('Не удалось отправить электронное письмо');
-    }
-  }
 }

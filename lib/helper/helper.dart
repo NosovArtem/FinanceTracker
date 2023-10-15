@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 TimeOfDay parseTimeOfDay(String timeString) {
   try {
@@ -21,4 +22,20 @@ String formatTimeOfDay24Hours(TimeOfDay timeOfDay) {
   final int minute = timeOfDay.minute;
 
   return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+}
+
+
+
+Future<void> sendEmail(String title, String body) async {
+  final Uri emailUri = Uri(
+    scheme: 'mailto',
+    path: 'tatatansv@gmail.com',
+    queryParameters: {'subject': title, 'body': body},
+  );
+
+  if (await canLaunch(emailUri.toString())) {
+    await launch(emailUri.toString());
+  } else {
+    print('Не удалось отправить электронное письмо');
+  }
 }

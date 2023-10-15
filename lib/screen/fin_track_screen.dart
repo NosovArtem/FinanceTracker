@@ -183,7 +183,7 @@ class FinTrackScreenState extends State<FinTrackScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showPopupWithButtons(context);
+          showPopupWithButtons(context, 'Выберите категорию');
         },
         child: Icon(Icons.add),
       ),
@@ -241,7 +241,11 @@ class FinTrackScreenState extends State<FinTrackScreen> {
   Widget getInnerRow(String dateKey, FinancialRecord record) {
     return Row(
       children: [
-        Icon(Icons.add),
+        Image.memory(
+          record.category.iconObj.icon,
+          width: 30,
+          height: 30,
+        ),
         SizedBox(width: 15.0),
         Column(
           children: [
@@ -280,12 +284,12 @@ class FinTrackScreenState extends State<FinTrackScreen> {
     );
   }
 
-  Future<void> showPopupWithButtons(BuildContext context) async {
+  Future<void> showPopupWithButtons(BuildContext context, String title) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text('Выберите категорию'),
+            title: Text(title),
             content: Container(
               width: double.maxFinite,
               child: ListView.builder(

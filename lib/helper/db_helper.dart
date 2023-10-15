@@ -9,7 +9,7 @@ import 'package:share/share.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static const databaseName = "FinTracker22.db";
+  static const databaseName = "FinTracker32.db";
   static const _databaseVersion = 1;
 
   DatabaseHelper._privateConstructor();
@@ -36,14 +36,6 @@ class DatabaseHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-    CREATE TABLE 'user' (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
-    password TEXT NOT NULL
-    );
-   ''');
-
-    await db.execute('''
     CREATE TABLE 'financial_record' (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -57,35 +49,52 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-    CREATE TABLE 'category' (
+    CREATE TABLE 'categories' (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL
+    icon_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    FOREIGN KEY (icon_id) REFERENCES icons (id)
     );
     ''');
 
-    await db
-        .execute('''INSERT INTO 'category' VALUES(1, 'groceries');''');
-    await db.execute('''INSERT INTO 'category' VALUES(2, 'bill');''');
-    await db.execute('''INSERT INTO 'category' VALUES(3, 'archi');''');
-    await db.execute('''INSERT INTO 'category' VALUES(4, 'doctor');''');
-    await db
-        .execute('''INSERT INTO 'category' VALUES(5, 'ready food');''');
-    await db.execute('''INSERT INTO 'category' VALUES(6, 'other');''');
+    await db.execute('''
+    CREATE TABLE 'icons' (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    icon BLOB
+    );
+    ''');
+
+    // await db
+    //     .execute('''INSERT INTO 'categories' VALUES(1, 'groceries', null);''');
+    // await db.execute('''INSERT INTO 'categories' VALUES(2, 'bill', null);''');
+    // await db.execute('''INSERT INTO 'categories' VALUES(3, 'archi', null);''');
+    // await db.execute('''INSERT INTO 'categories' VALUES(4, 'doctor', null);''');
+    // await db
+    //     .execute('''INSERT INTO 'categories' VALUES(5, 'ready food', null);''');
+    // await db.execute('''INSERT INTO 'categories' VALUES(6, 'other', null);''');
+
+    await db.execute('''
+    CREATE TABLE 'users' (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name TEXT NOT NULL, 
+    last_name TEXT, 
+    email TEXT, 
+    phone_number TEXT 
+    );
+   ''');
 
     await db.execute('''
     CREATE TABLE debts_loans (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    borrower_id INTEGER NOT NULL, 
-    lender_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL, 
+    is_debt INTEGER, 
     loan_date DATE NOT NULL,
     amount REAL NOT NULL,
     balance REAL NOT NULL,
     repayment_date DATE,
     repayment_amount REAL,
     note TEXT,
-    status TEXT,
-    FOREIGN KEY (borrower_id) REFERENCES borrowers(id),
-    FOREIGN KEY (lender_id) REFERENCES lenders(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
     );
     ''');
 
@@ -97,26 +106,6 @@ class DatabaseHelper {
     repayment_amount REAL NOT NULL, 
     note TEXT, 
     FOREIGN KEY (debt_loan_id) REFERENCES debts_loans(id)
-    );
-    ''');
-
-    await db.execute('''
-    CREATE TABLE borrowers (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_name TEXT NOT NULL, 
-    last_name TEXT NOT NULL, 
-    email TEXT, 
-    phone_number TEXT 
-    );
-    ''');
-
-    await db.execute('''
-    CREATE TABLE lenders (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    company_name TEXT NOT NULL, 
-    contact_person TEXT, 
-    email TEXT, 
-    phone_number TEXT 
     );
     ''');
 

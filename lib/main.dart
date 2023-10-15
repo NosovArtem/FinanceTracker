@@ -3,13 +3,13 @@ import 'package:finance_tracker/screen/menu_backup_screen.dart';
 import 'package:finance_tracker/screen/menu_category_screen.dart';
 import 'package:finance_tracker/screen/menu_debts_and_loans_screen.dart';
 import 'package:finance_tracker/screen/menu_export_to_exel.dart';
-import 'package:finance_tracker/screen/menu_feedback_screen.dart';
-import 'package:finance_tracker/screen/menu_savingd_screen.dart';
+import 'package:finance_tracker/screen/menu_saving_screen.dart';
 import 'package:finance_tracker/screen/menu_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'helper/helper.dart';
 import 'screen/fin_track_screen.dart';
 
 void main() async {
@@ -21,7 +21,7 @@ void main() async {
       '/category': (context) => ExpenseCategoryScreen(database),
       '/backup': (context) => BackupScreen(),
       '/user': (context) => UserPage(),
-      '/feedback': (context) => FeedbackPage(),
+      // '/feedback': (context) => FeedbackPage(),
       '/exel': (context) => ImportExportExelScreen(database),
       '/debtloan': (context) => DebtLoanListScreen(database),
       '/savings': (context) => SavingsListScreen(database),
@@ -43,8 +43,8 @@ class Home extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              'UserName',
-              style: TextStyle(fontSize: 20.0),
+              'Fin tracker',
+              style: TextStyle(fontSize: 30.0),
             ),
             // Dropdown(context),
           ],
@@ -57,7 +57,7 @@ class Home extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.account_circle_outlined),
               title: Text(
-                'UserName',
+                '',
                 style: TextStyle(fontSize: 22),
               ),
               onTap: () {
@@ -111,8 +111,7 @@ class Home extends StatelessWidget {
               leading: Icon(Icons.send),
               title: Text('Contact to developer'),
               onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/feedback');
+                sendEmail("Тема письма", "Тело письма");
               },
             ),
             ListTile(

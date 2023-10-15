@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 class UserRepository extends Repository<User> {
   Database database;
 
-  static const String table = 'user';
+  static const String table = 'users';
 
   UserRepository(this.database);
 

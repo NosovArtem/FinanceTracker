@@ -40,6 +40,20 @@ dependencies:
   share: ^2.0.4
   url_launcher: ^6.0.9
   excel: ^2.1.0
+  font_awesome_flutter: ^9.0.0
+  image_picker: ^0.8.4
+  image: ^4.0.15
+  flutter_launcher_icons: ^0.13.1
+
+
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/launcher/app_icon.png"
+  image_path_android: "assets/launcher/app_icon.png"
+  #  adaptive_icon_background: "assets/launcher/background.png"
+  #  adaptive_icon_foreground: "assets/launcher/foreground.png"
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -47,6 +61,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.13.1"
   flutter_test:
     sdk: flutter
 
@@ -62,11 +77,16 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/
+    - assets/icons/
+    - assets/launcher/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

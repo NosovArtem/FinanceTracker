@@ -19,6 +19,7 @@ class _DebtLoanListScreenState extends State<DebtLoanListScreen> {
   late Database database;
   late List<DebtLoan> _debtLoans = [];
   late DebtLoanRepository repository;
+  List<String> optionList = ["Debt", "Loan"];
 
   @override
   void initState() {
@@ -64,7 +65,7 @@ class _DebtLoanListScreenState extends State<DebtLoanListScreen> {
                     'Сумма: ${debtLoan.amount.toStringAsFixed(2)}'
                     '\nДата взятия: ${debtLoan.loanDate.toLocal().toString().split(' ')[0]}'
                     '\nОстаток: ${debtLoan.balance.toStringAsFixed(2)}'
-                    '\nСтатус: ${debtLoan.status}',
+                    '\nСтатус: ${debtLoan.amount - debtLoan.balance == 0 ? "Closed" : "Open"}',
                   ),
                   onTap: () {
                     Navigator.push(
@@ -82,18 +83,47 @@ class _DebtLoanListScreenState extends State<DebtLoanListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-            builder: (context) => CreateDebtLoanScreen({}),
-          ))
-              .then((map) {
-            if (map != null) {
-              add(map["new"]);
-            }
-          });
+          showPopupWithButtons(context, "Set option");
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  Future<void> showPopupWithButtons(BuildContext context, String title) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+            title: Text(title),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: optionList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateDebtLoanScreen(
+                                database: database,
+                                initialData: {},
+                                isDebt: "Debt".endsWith(optionList[index]) ? 1 : 0),
+                          ),
+                        ).then((map) {
+                          if (map != null) {
+                            add(map["new"]);
+                          }
+                        });
+                      },
+                      child: Text(optionList[index]),
+                    );
+                  }),
+            ));
+      },
     );
   }
 

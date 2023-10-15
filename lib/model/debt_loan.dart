@@ -2,41 +2,38 @@ import 'obj.dart';
 
 class DebtLoan extends Obj {
   int id;
-  int borrowerId;
-  int lenderId;
+  int userId;
   DateTime loanDate;
   double amount;
   double balance;
   DateTime repaymentDate;
   double repaymentAmount;
   String note;
-  String status;
+  int isDebt;
 
   DebtLoan({
     required this.id,
-    required this.borrowerId,
-    required this.lenderId,
+    required this.userId,
     required this.loanDate,
     required this.amount,
     required this.balance,
     required this.repaymentDate,
     required this.repaymentAmount,
     required this.note,
-    required this.status,
+    required this.isDebt,
   });
 
   @override
   Map<String, dynamic> toCreateMap() {
     return {
-      'borrower_id': borrowerId,
-      'lender_id': lenderId,
+      'user_id': userId,
       'loan_date': loanDate.toIso8601String(),
       'amount': amount,
       'balance': balance,
       'repayment_date': repaymentDate.toIso8601String(),
       'repayment_amount': repaymentAmount,
       'note': note,
-      'status': status,
+      'is_debt': isDebt,
     };
   }
 
@@ -44,30 +41,28 @@ class DebtLoan extends Obj {
   Map<String, dynamic> toUpdateMap() {
     return {
       'id': id,
-      'borrower_id': borrowerId,
-      'lender_id': lenderId,
+      'user_id': userId,
       'loan_date': loanDate.toIso8601String(),
       'amount': amount,
       'balance': balance,
       'repayment_date': repaymentDate.toIso8601String(),
       'repayment_amount': repaymentAmount,
       'note': note,
-      'status': status,
+      'is_debt': isDebt,
     };
   }
 
   factory DebtLoan.fromMap(Map<String, dynamic> map) {
     return DebtLoan(
       id: map['id'],
-      borrowerId: map['borrower_id'],
-      lenderId: map['lender_id'],
+      userId: map['user_id'],
       loanDate: DateTime.parse(map['loan_date']),
       amount: map['amount'],
       balance: map['balance'],
       repaymentDate: DateTime.parse(map['repayment_date']),
       repaymentAmount: map['repayment_amount'],
       note: map['note'],
-      status: map['status'],
+      isDebt: map['is_debt'],
     );
   }
 }

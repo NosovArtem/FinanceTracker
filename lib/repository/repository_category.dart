@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class ExpenseCategoryRepository extends Repository<ExpenseCategory> {
   Database database;
-  static const String table = 'category';
+  static const String table = 'categories';
 
   ExpenseCategoryRepository(this.database);
 
@@ -21,7 +21,13 @@ class ExpenseCategoryRepository extends Repository<ExpenseCategory> {
 
   @override
   Future<List<ExpenseCategory>> getAll() async {
-    List<Map<String, Object?>> list = await database.query(table);
+    List<Map<String, Object?>> list = await database.rawQuery('''
+    SELECT categories.*,
+     icons.id AS i_id, 
+     icons.icon AS i_icon
+    FROM categories 
+    INNER JOIN icons ON categories.icon_id = icons.id
+    ''');
     return List.generate(list.length, (i) {
       return ExpenseCategory.fromMap(list[i]);
     });

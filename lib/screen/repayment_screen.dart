@@ -50,7 +50,7 @@ class _RepaymentHistoryScreenState extends State<RepaymentHistoryScreen> {
               '\nОстаток: ${_debtLoan.balance.toStringAsFixed(2)}'
               '\nrepaymentDate: ${_debtLoan.repaymentDate.toLocal().toString().split(' ')[0]}'
               '\nrepaymentAmount: ${_debtLoan.repaymentAmount.toStringAsFixed(2)}'
-              '\nСтатус: ${_debtLoan.status}',
+              '\nСтатус: ${_debtLoan.amount - _debtLoan.balance == 0 ? "Closed" : "Open"}',
             ),
           ),
           Expanded(

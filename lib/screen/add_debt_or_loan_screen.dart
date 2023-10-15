@@ -1,13 +1,21 @@
+import 'package:finance_tracker/screen/users.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../helper/helper.dart';
 import '../model/debt_loan.dart';
+import '../model/user.dart';
 import '../widget/date.dart';
 
 class CreateDebtLoanScreen extends StatefulWidget {
+  final Database database;
   final Map<String, dynamic> initialData;
+  final int isDebt;
 
-  CreateDebtLoanScreen(this.initialData);
+  CreateDebtLoanScreen(
+      {required this.database,
+      required this.initialData,
+      required this.isDebt});
 
   @override
   _CreateDebtLoanScreenState createState() => _CreateDebtLoanScreenState();
@@ -26,6 +34,8 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
   late DateTimePickerWidget dateOfTake;
   final TextEditingController takeDateController = TextEditingController();
   final TextEditingController takeTimeController = TextEditingController();
+
+  User? user;
 
   @override
   void dispose() {
@@ -53,8 +63,36 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
     );
   }
 
+  void _addBorrowerAndLender(BuildContext context, StatefulWidget widget) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ),
+    ).then((map) {
+      if (map != null) {
+        if (map["user"] != null) {
+          user = map["user"];
+        }
+        setState(() {});
+      }
+    });
+  }
+
+  Widget getBorrowOrLender(Database database, String title, User? user) {
+    return ListTile(
+      leading: Icon(Icons.person),
+      title: Text(user == null ? title : "${user.lastName} ${user.firstName}"),
+      trailing: Icon(Icons.arrow_forward),
+      onTap: () {
+        _addBorrowerAndLender(context, UsersScreen(database, title));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    String str = widget.isDebt == 1 ? "Borrowers" : "Lenders";
     return Scaffold(
         appBar: AppBar(
           title: Text('Добавление нового долга или займа'),
@@ -69,38 +107,21 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextField(
-                        controller: _noteController,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.note_add),
-                            labelText: 'Заметка'),
-                      ),
-                      TextField(
                         controller: _amountController,
                         decoration: InputDecoration(
                             prefixIcon: Icon(Icons.attach_money),
-                            labelText: 'Сумма'),
+                            labelText: 'Amount'),
                         keyboardType: TextInputType.number,
                       ),
-                      Text('Дата взятия'),
+                      getBorrowOrLender(widget.database, str, user),
                       dateOfGet,
                       TextField(
-                        controller: _balanceController,
+                        controller: _noteController,
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.attach_money),
-                            labelText: 'Остаток'),
-                        keyboardType: TextInputType.number,
+                            prefixIcon: Icon(Icons.note_add),
+                            labelText: 'Note'),
                       ),
-                      TextField(
-                        controller: _statusController,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.info), labelText: 'Статус'),
-                      ),
-                      TextField(
-                        controller: _repaymentAmountController,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.attach_money),
-                            labelText: 'Cумма возврата'),
-                      ),
+                      SizedBox(height: 70.0),
                       Text('Дата возврата'),
                       dateOfTake,
                       Center(
@@ -115,9 +136,8 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
                             TimeOfDay t1 =
                                 parseTimeOfDay(takeTimeController.text);
                             final newDebtLoan = DebtLoan(
-                              id: 1,
-                              borrowerId: 1,
-                              lenderId: 1,
+                              id: -1,
+                              userId: user!.id,
                               loanDate: DateTime(
                                   d.year, d.month, d.day, t.hour, t.minute),
                               amount: double.parse(_amountController.text),
@@ -127,7 +147,7 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
                               repaymentAmount:
                                   double.parse(_repaymentAmountController.text),
                               note: _noteController.text,
-                              status: _statusController.text,
+                              isDebt: widget.isDebt,
                             );
                             Navigator.pop(
                                 context, {"old": null, "new": newDebtLoan});

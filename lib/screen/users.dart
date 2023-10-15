@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../helper/popup_helper.dart';
-import '../../model/expense_category.dart';
 import '../../repository/repository.dart';
-import '../../repository/repository_category.dart';
-import 'add_category_screen.dart';
+import '../model/user.dart';
+import '../repository/reposiitory_user.dart';
+import 'add_users.dart';
 
-class ExpenseCategoryScreen extends StatefulWidget {
+class UsersScreen extends StatefulWidget {
+  String borrowerOrLender;
   Database database;
 
-  ExpenseCategoryScreen(this.database);
+  UsersScreen(this.database, this.borrowerOrLender);
 
   @override
-  _ExpenseCategoryScreenState createState() => _ExpenseCategoryScreenState();
+  _UsersScreenState createState() => _UsersScreenState();
 }
 
-class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
-  late Repository<ExpenseCategory> repository =
-      ExpenseCategoryRepository(widget.database);
-  List<ExpenseCategory> category = [];
+class _UsersScreenState extends State<UsersScreen> {
+  late Repository<User> repository = UserRepository(widget.database);
+  List<User> borrowersAndLenders = [];
 
   @override
   void initState() {
@@ -28,23 +28,23 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
   }
 
   Future<void> _load() async {
-    List<ExpenseCategory> list = await repository.getAll();
+    List<User> list = await repository.getAll();
     setState(() {
-      category = list;
+      borrowersAndLenders = list;
     });
   }
 
-  Future<void> add(ExpenseCategory record) async {
+  Future<void> add(User record) async {
     repository.add(record);
     _load();
   }
 
-  Future<void> update(ExpenseCategory record) async {
+  Future<void> update(User record) async {
     repository.update(record);
     _load();
   }
 
-  void delete(ExpenseCategory record) {
+  void delete(User record) {
     repository.delete(record.id);
     _load();
   }
@@ -66,13 +66,13 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Category'),
+        title: Text(widget.borrowerOrLender),
       ),
       body: ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
-        itemCount: category.length,
+        itemCount: borrowersAndLenders.length,
         itemBuilder: (context, index) {
-          final record = category[index];
+          final record = borrowersAndLenders[index];
           return Container(
             margin: EdgeInsets.all(10),
             padding: EdgeInsets.all(10),
@@ -88,19 +88,25 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Image.memory(
-                              record.iconObj.icon,
-                              width: 30,
-                              height: 30,
-                            ),
-                            SizedBox(width: 8.0),
-                            Text(
-                              record.name,
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ],
+                        InkWell(
+                          child: Row(
+                            children: [
+                              Icon(Icons.man),
+                              SizedBox(width: 8.0),
+                              Text(
+                                record.firstName,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                record.lastName,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                          onTap: () async {
+                            Navigator.pop(
+                                context, {"user": record});
+                          },
                         ),
                       ],
                     ),
@@ -126,8 +132,8 @@ class _ExpenseCategoryScreenState extends State<ExpenseCategoryScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pop();
-          _createRecord(context, AddCategoryScreen(widget.database));
+          // Navigator.of(context).pop();
+          _createRecord(context, AddUserScreen(widget.database));
         },
         child: Icon(Icons.add),
       ),

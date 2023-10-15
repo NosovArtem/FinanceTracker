@@ -2,20 +2,26 @@ import 'package:finance_tracker/model/obj.dart';
 
 class User extends Obj {
   int id;
-  String username;
-  String password;
+  String firstName;
+  String lastName;
+  String email;
+  String phoneNumber;
 
   User({
     required this.id,
-    required this.username,
-    required this.password,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.phoneNumber,
   });
 
   @override
   Map<String, dynamic> toCreateMap() {
     return {
-      'username': username,
-      'password': password,
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+      'phone_number': phoneNumber,
     };
   }
 
@@ -23,16 +29,20 @@ class User extends Obj {
   Map<String, dynamic> toUpdateMap() {
     return {
       'id': id,
-      'username': username,
-      'password': password,
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+      'phone_number': phoneNumber,
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'],
-      username: map['username'],
-      password: map['password'],
+      firstName: map['first_name'],
+      lastName: map['last_name'],
+      email: map['email'],
+      phoneNumber: map['phone_number'],
     );
   }
 }

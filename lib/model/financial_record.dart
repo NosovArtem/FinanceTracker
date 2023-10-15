@@ -1,3 +1,4 @@
+import 'package:finance_tracker/model/icon.dart';
 import 'package:finance_tracker/model/obj.dart';
 
 import 'expense_category.dart';
@@ -46,7 +47,10 @@ class FinancialRecord extends Obj {
     return FinancialRecord(
       id: map['id'],
       userId: map['user_id'],
-      category: ExpenseCategory(id: map['cat_id'], name: map['cat_name']),
+      category: ExpenseCategory(
+          id: map['cat_id'],
+          name: map['cat_name'],
+          iconObj: IconObj(id: map['i_id'], icon: map['i_icon'])),
       amount: map['amount'],
       note: map['note'],
       date: DateTime.parse(map['date']),
