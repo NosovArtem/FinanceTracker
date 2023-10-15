@@ -10,6 +10,7 @@
  - ~~add icons~~
  - add currents table
  - recalculate expensive with different current
+ - add checking on main fields
 
 A new Flutter project.
 
