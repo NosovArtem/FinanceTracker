@@ -9,7 +9,7 @@ import 'package:share/share.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static const databaseName = "FinTracker32.db";
+  static const databaseName = "FinTracker.db";
   static const _databaseVersion = 1;
 
   DatabaseHelper._privateConstructor();

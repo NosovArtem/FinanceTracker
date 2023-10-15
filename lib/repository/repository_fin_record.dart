@@ -23,9 +23,14 @@ class FinancialRecordRepository extends Repository<FinancialRecord> {
   @override
   Future<List<FinancialRecord>> getAll() async {
     List<Map<String, Object?>> list = await database.rawQuery('''
-    SELECT financial_record.*, categories.id AS cat_id, categories.name AS cat_name 
+    SELECT financial_record.*, financial_record.date as date,
+     categories.id AS cat_id, 
+     categories.name AS cat_name, 
+     icons.id AS i_id,
+     icons.icon AS i_icon
     FROM financial_record 
-    INNER JOIN category ON financial_record.category_id = categories.id
+    INNER JOIN categories ON financial_record.category_id = categories.id
+    INNER JOIN icons ON categories.icon_id = icons.id
     ''');
     return List.generate(list.length, (i) {
       return FinancialRecord.fromMap(list[i]);

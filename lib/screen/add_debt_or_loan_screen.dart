@@ -24,26 +24,18 @@ class CreateDebtLoanScreen extends StatefulWidget {
 class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
   TextEditingController _noteController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
-  TextEditingController _repaymentAmountController = TextEditingController();
-  TextEditingController _loanDateController = TextEditingController();
-  TextEditingController _balanceController = TextEditingController();
-  TextEditingController _statusController = TextEditingController();
   late DateTimePickerWidget dateOfGet;
   final TextEditingController getDateController = TextEditingController();
   final TextEditingController getTimeController = TextEditingController();
   late DateTimePickerWidget dateOfTake;
   final TextEditingController takeDateController = TextEditingController();
   final TextEditingController takeTimeController = TextEditingController();
-
   User? user;
 
   @override
   void dispose() {
     _noteController.dispose();
     _amountController.dispose();
-    _loanDateController.dispose();
-    _balanceController.dispose();
-    _statusController.dispose();
     super.dispose();
   }
 
@@ -141,11 +133,11 @@ class _CreateDebtLoanScreenState extends State<CreateDebtLoanScreen> {
                               loanDate: DateTime(
                                   d.year, d.month, d.day, t.hour, t.minute),
                               amount: double.parse(_amountController.text),
-                              balance: double.parse(_balanceController.text),
+                              balance: 0,
                               repaymentDate: DateTime(d1.year, d1.month, d1.day,
                                   t1.hour, t1.minute),
                               repaymentAmount:
-                                  double.parse(_repaymentAmountController.text),
+                                  double.parse(_amountController.text),
                               note: _noteController.text,
                               isDebt: widget.isDebt,
                             );
