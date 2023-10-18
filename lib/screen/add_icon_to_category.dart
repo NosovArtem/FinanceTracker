@@ -38,10 +38,10 @@ class _IconSelectionScreenState extends State<IconSelectionScreen> {
         appBar: AppBar(
           title: getButton(),
         ),
-        body: getGridView());
+        body: getGridViews());
   }
 
-  Widget getGridView() {
+  Widget getGridViews() {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4, // Количество столбцов в сетке
