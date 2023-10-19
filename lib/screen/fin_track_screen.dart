@@ -38,6 +38,7 @@ class FinTrackScreenState extends State<FinTrackScreen> {
 
   Future<void> loadAll() async {
     List<FinancialRecord> records = await repository.getAllByMonth(currentDate);
+    records.sort((a, b) => b.date.compareTo(a.date));
     listCategory = await repositoryCategory.getAll();
     totalSpent = calcMonthSpent(records);
     map = groupItemsByDate(records);
