@@ -76,7 +76,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
         item.category.name,
         item.amount,
         item.note,
-        item.date.toString()
+        DateFormat('YYYY-MM-dd').format(item.date)
       ]);
     }
 

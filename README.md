@@ -15,6 +15,12 @@
 
 A new Flutter project.
 
+build: 
+    -  ~~flutter run~~
+    -  ~~flutter run --release~~
+    -  flutter build apk 
+*\projects\FLUTTER\FinanceTracker\build\app\outputs\flutter-apk
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
