@@ -68,7 +68,7 @@ class _AddSavingsScreenState extends State<AddSavingsScreen> {
               child: ElevatedButton(
                 onPressed: () async {
                   Savings newSaving = Savings(
-                    id: 1,
+                    id: -1,
                     accountName: accountNameController.text,
                     goalName: goalNameController.text,
                     currency: currencyController.text,

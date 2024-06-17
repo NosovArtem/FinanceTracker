@@ -70,8 +70,8 @@ class _AddRepaymentScreenState extends State<AddRepaymentScreen> {
                   DateTime d = DateTime.parse(dateController.text);
                   TimeOfDay t = parseTimeOfDay(timeController.text);
                   Repayment newRepayment = Repayment(
-                    id: 1,
-                    debtLoanId: 1,
+                    id: -1,
+                    debtLoanId: widget.initialData['debtLoanId'],
                     repaymentDate:
                         DateTime(d.year, d.month, d.day, t.hour, t.minute),
                     repaymentAmount: double.parse(amountController.text),

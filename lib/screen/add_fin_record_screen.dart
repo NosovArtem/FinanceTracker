@@ -1,27 +1,22 @@
 import 'package:finance_tracker/model/financial_record.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 import '../helper/helper.dart';
 import '../helper/popup_helper.dart';
 import '../model/expense_category.dart';
-import '../repository/repository_fin_record.dart';
 import '../widget/date.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  final Database database;
   final Map<String, dynamic> initialData;
   final List<ExpenseCategory> categoryList;
 
-  AddTransactionScreen(this.database, this.initialData, this.categoryList);
+  AddTransactionScreen(this.initialData, this.categoryList);
 
   @override
   _AddTransactionScreenState createState() => _AddTransactionScreenState();
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
-  late FinancialRecordRepository repository =
-  FinancialRecordRepository(widget.database);
   TextEditingController categoryController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController noteController = TextEditingController();

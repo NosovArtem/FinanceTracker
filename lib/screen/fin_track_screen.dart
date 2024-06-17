@@ -174,7 +174,7 @@ class FinTrackScreenState extends State<FinTrackScreen> {
           ),
           Text('Сумма потраченных средств за месяц'),
           Text(
-            '\РСД $totalSpent',
+            '\RUB $totalSpent',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           Expanded(
@@ -273,7 +273,6 @@ class FinTrackScreenState extends State<FinTrackScreen> {
                   _updateRecord(
                       context,
                       AddTransactionScreen(
-                        widget.database,
                         getFR(record),
                         listCategory,
                       ));
@@ -303,7 +302,6 @@ class FinTrackScreenState extends State<FinTrackScreen> {
                         _createRecord(
                             context,
                             AddTransactionScreen(
-                              widget.database,
                               {
                                 'cat_id': listCategory[index].id,
                                 'cat_name': listCategory[index].name,

@@ -30,7 +30,11 @@ class RepaymentRepository extends Repository<Repayment> {
   }
 
   Future<List<Repayment>> getAllByDebtLoanId(int debtLoanId) async {
-    List<Map<String, Object?>> list = await database.query(table);
+    List<Map<String, Object?>> list = await database.query(
+      table,
+      where: 'debt_loan_id = ?',
+      whereArgs: [debtLoanId],
+    );
     return List.generate(list.length, (i) {
       return Repayment.fromMap(list[i]);
     });

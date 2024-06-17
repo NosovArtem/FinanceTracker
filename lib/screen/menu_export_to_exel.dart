@@ -54,14 +54,14 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
     var excel = Excel.createExcel();
 
     // Добавляем страницы (листы)
-    var sheet1 = excel['Sheet1'];
-    var sheet2 = excel['Sheet2'];
-    var sheet3 = excel['Sheet3'];
-    var sheet4 = excel['Sheet4'];
-    var sheet5 = excel['Sheet5'];
-    var sheet6 = excel['Sheet6'];
+    var expensesSheet = excel['Expenses'];
+    var categoriesSheet = excel['Categories'];
+    var contactsSheet = excel['Contacts'];
+    var debtsSheet = excel['Debts'];
+    var repaymentsSheet = excel['Repayments'];
+    var savingsSheet = excel['Savings'];
 
-    sheet1.appendRow([
+    expensesSheet.appendRow([
       'ID',
       'UserID',
       'Category',
@@ -70,7 +70,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       'Date',
     ]);
     for (var item in records) {
-      sheet1.appendRow([
+      expensesSheet.appendRow([
         item.id,
         item.userId,
         item.category.name,
@@ -80,18 +80,18 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       ]);
     }
 
-    sheet2.appendRow([
+    categoriesSheet.appendRow([
       'ID',
       'NAME',
     ]);
     for (var item in categories) {
-      sheet2.appendRow([
+      categoriesSheet.appendRow([
         item.id,
         item.name,
       ]);
     }
 
-    sheet3.appendRow([
+    contactsSheet.appendRow([
       'ID',
       'FirstName',
       'LastName',
@@ -99,7 +99,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       'PhoneNumber',
     ]);
     for (var item in users) {
-      sheet3.appendRow([
+      contactsSheet.appendRow([
         item.id,
         item.firstName,
         item.lastName,
@@ -108,7 +108,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       ]);
     }
 
-    sheet4.appendRow([
+    debtsSheet.appendRow([
       'ID',
       'UserId',
       'LoanDate',
@@ -120,7 +120,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       'isDebt',
     ]);
     for (var item in debts) {
-      sheet4.appendRow([
+      debtsSheet.appendRow([
         item.id,
         item.userId,
         item.loanDate,
@@ -133,7 +133,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       ]);
     }
 
-    sheet5.appendRow([
+    repaymentsSheet.appendRow([
       'ID',
       'DebtLoanId',
       'RepaymentDate',
@@ -141,7 +141,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       'Note',
     ]);
     for (var item in repayments) {
-      sheet5.appendRow([
+      repaymentsSheet.appendRow([
         item.id,
         item.debtLoanId,
         item.repaymentDate,
@@ -150,7 +150,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       ]);
     }
 
-    sheet6.appendRow([
+    savingsSheet.appendRow([
       'ID',
       'AccountName',
       'GoalName',
@@ -159,7 +159,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       'Note',
     ]);
     for (var item in savings) {
-      sheet6.appendRow([
+      savingsSheet.appendRow([
         item.id,
         item.accountName,
         item.goalName,

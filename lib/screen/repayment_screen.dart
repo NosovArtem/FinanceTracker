@@ -19,17 +19,21 @@ class RepaymentHistoryScreen extends StatefulWidget {
 class _RepaymentHistoryScreenState extends State<RepaymentHistoryScreen> {
   late DebtLoan _debtLoan;
   late List<Repayment> _repayments = [];
-  late RepaymentRepository repository;
+  late RepaymentRepository repaymentRepository;
+  late double total = 0;
 
   @override
   void initState() {
-    repository = RepaymentRepository(widget.database);
+    repaymentRepository = RepaymentRepository(widget.database);
     loadAll();
   }
 
   Future<void> loadAll() async {
     _debtLoan = widget.initialData;
-    _repayments = await repository.getAllByDebtLoanId(_debtLoan.id);
+    _repayments = await repaymentRepository.getAllByDebtLoanId(_debtLoan.id);
+    for (var repayment in _repayments) {
+      total += repayment.repaymentAmount;
+    }
     setState(() {});
   }
 
@@ -47,9 +51,9 @@ class _RepaymentHistoryScreenState extends State<RepaymentHistoryScreen> {
               'Описание: ${_debtLoan.note}'
               '\nСумма: ${_debtLoan.amount.toStringAsFixed(2)}'
               '\nДата взятия: ${_debtLoan.loanDate.toLocal().toString().split(' ')[0]}'
-              '\nОстаток: ${_debtLoan.balance.toStringAsFixed(2)}'
-              '\nrepaymentDate: ${_debtLoan.repaymentDate.toLocal().toString().split(' ')[0]}'
-              '\nrepaymentAmount: ${_debtLoan.repaymentAmount.toStringAsFixed(2)}'
+              '\nОстаток: ${(_debtLoan.amount - total).toStringAsFixed(2)}'
+              '\nДата возврата: ${_debtLoan.repaymentDate.toLocal().toString().split(' ')[0]}'
+              '\nСумма возврата: ${_debtLoan.repaymentAmount.toStringAsFixed(2)}'
               '\nСтатус: ${_debtLoan.amount - _debtLoan.balance == 0 ? "Closed" : "Open"}',
             ),
           ),
@@ -72,23 +76,33 @@ class _RepaymentHistoryScreenState extends State<RepaymentHistoryScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-            builder: (context) => AddRepaymentScreen({}),
-          ))
-              .then((map) {
-            if (map != null) {
-              add(map["new"]);
-            }
-          });
+          Navigator.of(context).pop();
+          _createRecord(
+              context,
+              AddRepaymentScreen(
+                  {'debtLoanId': _debtLoan.id}
+              ));
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
+  void _createRecord(BuildContext context, StatefulWidget widget) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ),
+    ).then((map) {
+      if (map != null) {
+        add(map["new"]);
+      }
+    });
+  }
+
   Future<void> add(Repayment record) async {
-    repository.add(record);
+    repaymentRepository.add(record);
     loadAll();
   }
 }
