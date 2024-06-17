@@ -68,6 +68,7 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
       'Amount',
       'Note',
       'Date',
+      'Month',
     ]);
     for (var item in records) {
       expensesSheet.appendRow([
@@ -76,7 +77,8 @@ class _ImportExportExelScreenState extends State<ImportExportExelScreen> {
         item.category.name,
         item.amount,
         item.note,
-        DateFormat('YYYY-MM-dd').format(item.date)
+        item.date.toIso8601String(),
+        DateFormat('YYYY-MM').format(item.date)
       ]);
     }
 
